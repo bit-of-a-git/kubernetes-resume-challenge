@@ -1,0 +1,32 @@
+version: "3.7"
+services:
+  ecom-web:
+    container_name: ecom-web
+    build: ../web-app
+    deploy:
+      replicas: 1
+    depends_on: 
+    - database
+    networks:
+      - ecom-net
+    ports:
+      - "80:80"
+    env_file:
+      - frontend.env
+
+  database:
+    container_name: mysql-service
+    image: mariadb:latest
+    volumes:
+      - ./sql-scripts:/docker-entrypoint-initdb.d
+    deploy:
+      replicas: 1
+    networks:
+      - ecom-net
+    ports:
+      - "3306:3306"
+    env_file:
+      - db.env
+
+networks: 
+  ecom-net:
