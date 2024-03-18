@@ -1,3 +1,13 @@
+<?php
+// Check if dark mode feature is enabled
+$darkModeEnabled = getenv('FEATURE_DARK_MODE');
+
+// Set CSS file paths based on dark mode toggle
+$styleCss = $darkModeEnabled ? 'style-dark.css' : 'style.css';
+$bootstrapCss = $darkModeEnabled ? 'bootstrap-dark.min.css' : 'bootstrap.min.css';
+$logoImage = $darkModeEnabled ? 'logo.png' : 'logo-2.png';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -10,7 +20,7 @@
         <!-- Favicon -->
         <link rel="icon" href="img/favicon.png" type="image/png" />
         <!-- Bootstrap CSS -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/<?php echo $bootstrapCss; ?>" rel="stylesheet">
         <!-- Icon CSS-->
         <link rel="stylesheet" href="vendors/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="vendors/linearicons/linearicons-1.0.0.css">
@@ -20,7 +30,7 @@
         <link rel="stylesheet" href="vendors/owl_carousel/owl.carousel.css">
 
         <!-- Theme style CSS -->
-        <link href="css/style.css" rel="stylesheet">
+        <link href="css/<?php echo $styleCss; ?>" rel="stylesheet">
 <!--        <link href="css/responsive.css" rel="stylesheet">  -->
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -56,7 +66,7 @@
                             </button>
                             <a class="navbar-brand" href="index.html">
                                 <img src="img/logo.png" alt="">
-                                <img src="img/logo-2.png" alt="">
+                                <img src="img/<?php echo $logoImage; ?>" alt="">
                             </a>
                         </div>
                     </div>
