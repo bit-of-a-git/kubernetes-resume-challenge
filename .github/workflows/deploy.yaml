@@ -67,6 +67,5 @@ jobs:
         gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} --location ${{ env.GKE_ZONE }}
         
     - name: Deploy with Helm
-      working-directory: ./helm-ecom-app
       run: |
-        helm upgrade ${{ env.DEPLOYMENT_NAME }} --install .
+        helm upgrade ${{ env.DEPLOYMENT_NAME }} --install helm-ecom-app
