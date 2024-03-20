@@ -35,4 +35,4 @@ jobs:
       with:
         context: "{{defaultContext}}:web-app"
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/ecom-web:latest
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/ecom-web:v1
