@@ -64,7 +64,7 @@ jobs:
 
     - name: Set up kubeconfig
       run: |
-        gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }}' --location ${{ env.GKE_ZONE }}
+        gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }} --location ${{ env.GKE_ZONE }}
         
     - name: Deploy with Helm
       working-directory: ./helm-ecom-app
