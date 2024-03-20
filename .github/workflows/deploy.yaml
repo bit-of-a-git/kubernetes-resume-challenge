@@ -61,6 +61,9 @@ jobs:
     - name: Change default gcloud project
       run: |
         gcloud config set project ${{ secrets.GKE_PROJECT }}'
+
+    - name: Set up kubeconfig
+      run: |
         gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }}' --location ${{ env.GKE_ZONE }}
         
     - name: Deploy with Helm
