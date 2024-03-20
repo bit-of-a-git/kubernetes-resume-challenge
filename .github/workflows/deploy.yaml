@@ -60,7 +60,7 @@ jobs:
 
     - name: Change default gcloud project
       run: |
-        gcloud config set project ${{ secrets.GKE_PROJECT }}'
+        gcloud config set project ${{ secrets.GKE_PROJECT }}
 
     - name: Set up kubeconfig
       run: |
