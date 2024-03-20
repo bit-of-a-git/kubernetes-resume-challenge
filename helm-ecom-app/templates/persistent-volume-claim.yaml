@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.database.pvcName }}
+  labels:
+    app: {{ .Release.Name }}-{{ .Values.database.name }}
+
+  {{- if .Values.namespace }}
+  namespace: {{ .Release.Name }}-{{ .Values.namespace }}
+  {{- end }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.database.pvcStorage }}

@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.website.name }}
+  
+  {{- if .Values.namespace }}
+  namespace: {{ .Release.Name }}-{{ .Values.namespace }}
+  {{- end }}
+
+spec:
+  replicas: {{ .Values.website.replicas | default 3 }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-{{ .Values.website.name }}
+  strategy:
+    type: {{ .Values.website.strategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-{{ .Values.website.name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-{{ .Values.website.containerName }}
+        image: {{ .Values.website.image }}
+        resources:
+          requests:
+            memory: {{ .Values.website.memoryRequest }}
+            cpu: {{ .Values.website.cpuRequest }}
+        env:
+        - name: DB_HOST
+          value: {{ .Release.Name }}-{{ .Values.database.serviceName }}
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-{{ .Values.database.secretName }}
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-{{ .Values.database.secretName }}
+              key: password
+        - name: DB_NAME
+          value: ecomdb
+        - name: FEATURE_DARK_MODE
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Release.Name }}-{{ .Values.website.darkModeConfigMapName }}
+              key: FEATURE_DARK_MODE
+        ports:
+        - containerPort: {{ .Values.website.containerPort }}
+        readinessProbe:
+          httpGet:
+            path: {{ .Values.website.readinessProbe.endpoint }}
+            port: {{ .Values.website.containerPort }}
+          initialDelaySeconds: {{ .Values.website.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.website.readinessProbe.periodSeconds }}
+        livenessProbe:
+          httpGet:
+            path: {{ .Values.website.livenessProbe.endpoint }}
+            port: {{ .Values.website.containerPort }}
+          initialDelaySeconds: {{ .Values.website.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.website.livenessProbe.periodSeconds }}
+          failureThreshold: {{ .Values.website.livenessProbe.failureThreshold }}
+        imagePullPolicy: {{ .Values.website.imagePullPolicy }}

@@ -1,0 +1,59 @@
+# Default values for helm-ecom-app.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+namespace: ecom-app
+
+website:
+  darkModeConfigMapName: darkmode-toggle
+  darkModeEnabled: true
+  name: ecom-web
+  replicas: 3
+  strategy: RollingUpdate
+  containerName: ecom-web
+  image: tspb80/ecom-web:v1
+  memoryRequest: 20Mi
+  cpuRequest: 10m
+  containerPort: 80
+  imagePullPolicy: Always
+  readinessProbe:
+    endpoint: /
+    initialDelaySeconds: 15
+    periodSeconds: 10
+  livenessProbe:
+    endpoint: /
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    failureThreshold: 3
+  hpa:
+    name: ecom-web
+    minReplicas: 3
+    maxReplicas: 10
+    metricResource: cpu
+    targetAverageUtilization: 50
+  loadBalancer:
+    name: ecom-web-load-balancer
+    port: 80
+
+database:
+  name: ecom-db
+  replicas: 1
+  containerName: mariadb
+  image: mariadb:latest
+  containerPort: 3306
+  usernameEnv: MARIADB_USER
+  passwordEnv: MARIADB_PASSWORD
+  serviceName: mysql-service
+  clusterIPValue: None
+  pvName: mariadb-pv
+  pvcName: mariadb-pv-claim
+  pvcStorage: 250M
+  secretName: db-credentials
+  username: ""
+  password: ""
+  dbLoadScriptVolumeName: mariadb-init-script
+  dbLoadScriptName: db-load-script.sql
+  dbLoadScript: |-
+    USE ecomdb;
+    CREATE TABLE IF NOT EXISTS products (id mediumint(8) unsigned NOT NULL auto_increment,Name varchar(255) default NULL,Price varchar(255) default NULL, ImageUrl varchar(255) default NULL,PRIMARY KEY (id)) AUTO_INCREMENT=1;
+    INSERT INTO products (Name,Price,ImageUrl) VALUES ("Laptop","100","c-1.png"),("Drone","200","c-2.png"),("VR","300","c-3.png"),("Tablet","50","c-5.png"),("Watch","90","c-6.png"),("Phone Covers","20","c-7.png"),("Phone","80","c-8.png"),("Laptop","150","c-4.png");

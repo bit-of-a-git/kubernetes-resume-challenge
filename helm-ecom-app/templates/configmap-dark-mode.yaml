@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.website.darkModeConfigMapName }}
+
+  {{- if .Values.namespace }}
+  namespace: {{ .Release.Name }}-{{ .Values.namespace }}
+  {{- end }}
+data:
+  FEATURE_DARK_MODE: {{ .Values.website.darkModeEnabled | quote }}

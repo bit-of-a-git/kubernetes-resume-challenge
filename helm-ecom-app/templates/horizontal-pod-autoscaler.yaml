@@ -1,0 +1,22 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.website.hpa.name }}
+
+  {{- if .Values.namespace }}
+  namespace: {{ .Release.Name }}-{{ .Values.namespace }}
+  {{- end }}
+spec:
+  maxReplicas: {{ .Values.website.hpa.maxReplicas }}
+  metrics:
+  - resource:
+      name: {{ .Values.website.hpa.metricResource }}
+      target:
+        averageUtilization: {{ .Values.website.hpa.targetAverageUtilization }}
+        type: Utilization
+    type: Resource
+  minReplicas: {{ .Values.website.hpa.minReplicas }}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Release.Name }}-{{ .Values.website.name }}

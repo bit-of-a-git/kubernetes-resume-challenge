@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.database.dbLoadScriptName }}
+
+  {{- if .Values.namespace }}
+  namespace: {{ .Release.Name }}-{{ .Values.namespace }}
+  {{- end }}
+data:
+  db-load-script.sql: {{ .Values.database.dbLoadScript | toYaml | indent
+    1 }}

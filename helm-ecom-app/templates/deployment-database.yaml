@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.database.name }}
+
+  {{- if .Values.namespace }}
+  namespace: {{ .Release.Name }}-{{ .Values.namespace }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.database.replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-{{ .Values.database.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-{{ .Values.database.name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}-{{ .Values.database.containerName }}
+        image: {{ .Values.database.image }}
+        ports:
+        - containerPort: {{ .Values.database.containerPort }}
+        env:
+        - name: {{ .Values.database.usernameEnv }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-{{ .Values.database.secretName }}
+              key: username
+        - name: {{ .Values.database.passwordEnv }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Release.Name }}-{{ .Values.database.secretName }}
+              key: password
+        - name: MARIADB_DATABASE
+          value: ecomdb
+        - name: MARIADB_RANDOM_ROOT_PASSWORD
+          value: "1"
+        volumeMounts:
+        - name: {{ .Release.Name }}-{{ .Values.database.dbLoadScriptVolumeName }}
+          mountPath: /docker-entrypoint-initdb.d
+        - name: {{ .Release.Name }}-{{ .Values.database.pvName }}
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: {{ .Release.Name }}-{{ .Values.database.dbLoadScriptVolumeName }}
+        configMap:
+          name: {{ .Release.Name }}-{{ .Values.database.dbLoadScriptName }}
+      - name: {{ .Release.Name }}-{{ .Values.database.pvName }}
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-{{ .Values.database.pvcName }}

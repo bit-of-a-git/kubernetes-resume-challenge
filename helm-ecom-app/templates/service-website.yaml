@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.website.loadBalancer.name }}
+
+  {{- if .Values.namespace }}
+  namespace: {{ .Release.Name }}-{{ .Values.namespace }}
+  {{- end }}
+spec:
+  selector:
+    app: {{ .Release.Name }}-{{ .Values.website.name }}
+  ports:
+    - port: {{ .Values.website.loadBalancer.port }}
+      targetPort: {{ .Values.website.containerPort }}
+  type: LoadBalancer

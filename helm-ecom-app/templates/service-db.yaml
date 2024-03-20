@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.database.serviceName }}
+
+  {{- if .Values.namespace }}
+  namespace: {{ .Release.Name }}-{{ .Values.namespace }}
+  {{- end }}
+spec:
+  selector:
+    app: {{ .Release.Name }}-{{ .Values.database.name }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.database.containerPort }}
+      targetPort: {{ .Values.database.containerPort }}
+  clusterIP: {{ .Values.database.clusterIPValue }}
