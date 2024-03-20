@@ -9,4 +9,7 @@ spec:
     - protocol: TCP
       port: 3306
       targetPort: 3306
-  type: ClusterIP
+  # The Service option clusterIP: None lets the Service DNS name resolve directly to the Pod's IP
+  # address. This is optimal when you have only one Pod behind a Service and you don't intend to
+  # increase the number of Pods.
+  clusterIP: None
