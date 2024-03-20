@@ -6,11 +6,12 @@ on:
       - main
 
 env:
-  aws-production-account: ${{ secrets.AWS_PRODUCTION_ACCOUNT }}
-  aws-production-bucket: ${{ secrets.AWS_PRODUCTION_BUCKET }}
+  GKE_ZONE: us-central1-c   # Add your cluster zone here.
+  DEPLOYMENT_NAME: chez-blue # Add your deployment name here.
 
 jobs:
   build-image:
+    name: Build and push Docker image
     runs-on:
        - ubuntu-latest
   
@@ -36,3 +37,33 @@ jobs:
         context: "{{defaultContext}}:web-app"
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/ecom-web:v1
+
+  deploy-helm:
+    name: Deploy Helm charts to GKE
+    runs-on:
+      - ubuntu-latest
+    needs: [build-image]
+
+    steps:
+    - name: Install Helm
+      uses: azure/setup-helm@v3
+
+    - name: Authenticate to GCP
+      uses: 'google-github-actions/auth@v2'
+      with:
+        credentials_json: '${{ secrets.GKE_SA_KEY }}'
+  
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v2'
+      with:
+        version: '>= 363.0.0'
+
+    - name: Change default gcloud project
+      run: |
+        gcloud config set project ${{ secrets.GKE_PROJECT }}'
+        gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER }}' --location ${{ env.GKE_ZONE }}
+        
+    - name: Deploy with Helm
+      working-directory: ./helm-ecom-app
+      run: |
+        helm upgrade ${{ env.DEPLOYMENT_NAME }} --install .
