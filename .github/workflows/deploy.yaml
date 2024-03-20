@@ -62,4 +62,4 @@ jobs:
 
     - name: Deploy with Helm
       run: |
-        helm upgrade ${{ env.DEPLOYMENT_NAME }} --install helm-ecom-app
+        helm upgrade ${{ env.DEPLOYMENT_NAME }} --install --set database.username=${{ secrets.DB_USERNAME }} --set database.password=${{ secrets.DB_PASSWORD }} helm-ecom-app
