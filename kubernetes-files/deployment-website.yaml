@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ecom-web
-  labels:
-    app: ecom-web
 spec:
   replicas: 3
   selector:

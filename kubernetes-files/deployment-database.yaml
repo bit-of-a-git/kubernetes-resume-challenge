@@ -1,9 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ecom-db-deployment
-  labels:
-    app: ecom-db
+  name: ecom-db
 spec:
   replicas: 1
   selector:
@@ -37,7 +35,12 @@ spec:
         volumeMounts:
         - name: mariadb-init-script
           mountPath: /docker-entrypoint-initdb.d
+        - name: mariadb-pv
+          mountPath: /var/lib/mysql
       volumes:
       - name: mariadb-init-script
         configMap:
           name: db-load-script.sql
+      - name: mariadb-pv
+        persistentVolumeClaim:
+          claimName: mariadb-pv-claim
