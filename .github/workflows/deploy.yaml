@@ -63,6 +63,10 @@ jobs:
         location: ${{ env.GKE_ZONE }}
         cluster:  ${{ secrets.GKE_CLUSTER }}
 
+    - name: Package Helm chart
+      run: |
+        helm package helm-ecom-app/
+
     - name: Deploy with Helm
       run: |
-        helm upgrade ${{ env.DEPLOYMENT_NAME }} helm-ecom-app --install --set database.username=${{ secrets.DB_USERNAME }} --set database.password=${{ secrets.DB_PASSWORD }}
+        helm upgrade ${{ env.DEPLOYMENT_NAME }} ./helm-ecom-app-0.1.0.tgz --install --set database.username=${{ secrets.DB_USERNAME }} --set database.password=${{ secrets.DB_PASSWORD }}
