@@ -18,9 +18,9 @@ The helm-ecom-app directory contains the final files used for the Helm deploymen
 
 ## Images
 Normal:
-<img src="/images/Normal.png"/>
+<img src="images\Normal.png"/>
 Dark Mode:
-<img src="/images/Dark Mode.png"/>
+<img src="images\Dark Mode.png"/>
 
 ## Blog
 
