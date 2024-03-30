@@ -1,6 +1,6 @@
 <?php
 // Check if dark mode feature is enabled
-$darkModeEnabled = getenv('FEATURE_DARK_MODE');
+$darkModeEnabled = getenv('FEATURE_DARK_MODE') === 'true';
 
 // Set CSS file paths based on dark mode toggle
 $styleCss = $darkModeEnabled ? 'style-dark.css' : 'style.css';
