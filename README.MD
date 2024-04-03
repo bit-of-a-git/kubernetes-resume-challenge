@@ -17,6 +17,9 @@ The kubernetes-files directory holds K8s files used for the initial deployment o
 The helm-ecom-app directory contains the final files used for the Helm deployment of the e-commerce app to GKE.
 
 ## Images
+
+I have since taken the cluster down to save credits, but the following images show the final app accessed through the load balancer.
+
 Normal:
 <img src="images\Normal.png"/>
 Dark Mode:
